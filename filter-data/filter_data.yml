@@ -1,0 +1,27 @@
+---
+- name: filter raw data
+  hosts: localhost
+  vars:
+    raw_data: >-
+      File Content : 6969 : something09 : TTDATASOME_DOE_DOO --Serveice Monitor MILK -- TTJOOODPASLC-A-1 -- status -- GDCCDDCustomeFlow_CommunicationService -- Stopped
+
+      something: ITSOOFJ : TT_SOME_FIP_PROD -- Service Monitor SOME -- TTJOOODPASLC-A-1 -- status -- GDCCDDCustomeFlow_CommunicationService -- Stopped
+  tasks:
+  - name: filter data
+    set_fact:
+      data: "{{ data_content }}"
+    vars:
+      temp: "{{ (raw_data|string).split('\n') | replace('--',':') }}"
+      data_content: "{{ temp [0].split(':') | reject('match','File Content') | list}}"
+    when:
+    - "{{ data_content|length==8 }}"
+  
+  - name: display data
+    debug:
+      msg: "{{ data }}"
+
+
+
+
+              
+  
